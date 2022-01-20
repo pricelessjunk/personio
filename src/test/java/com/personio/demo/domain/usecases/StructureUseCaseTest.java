@@ -1,16 +1,15 @@
-package com.personio.demo.usecases;
+package com.personio.demo.domain.usecases;
 
-import io.quarkus.test.junit.QuarkusTest;
+import com.personio.demo.exceptions.CyclicStructureException;
+import com.personio.demo.exceptions.MultipleRootSupervisorException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import javax.json.Json;
 import javax.json.JsonObject;
 import java.util.HashMap;
 import java.util.Map;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.*;
 
 class StructureUseCaseTest {
 
@@ -18,11 +17,11 @@ class StructureUseCaseTest {
 
     @BeforeEach
     void init() {
-        this.useCase = new StructureUseCase();
+        this.useCase = new StructureUseCase(new StructureVerificationUsecase());
     }
 
     @Test
-    void parseHierarchy() {
+    void parseHierarchy() throws MultipleRootSupervisorException, CyclicStructureException {
         Map<String, String> input = new HashMap<>();
         input.put("Pete", "Nick");
         input.put("Barbara", "Nick");
@@ -30,7 +29,6 @@ class StructureUseCaseTest {
         input.put("Sophie", "Jonas");
 
         JsonObject parentJson = useCase.parseHierarchy(input);
-
 
         JsonObject jonasJson = parentJson.get("Jonas").asJsonObject();
         assertThat(jonasJson.size()).isEqualTo(1);
@@ -42,9 +40,9 @@ class StructureUseCaseTest {
         assertThat(nickJson.size()).isEqualTo(2);
 
         JsonObject peteJson = nickJson.get("Pete").asJsonObject();
-        assertThat(peteJson.size()).isEqualTo(0);
+        assertThat(peteJson.size()).isZero();
 
         JsonObject barbaraJson = nickJson.get("Barbara").asJsonObject();
-        assertThat(barbaraJson.size()).isEqualTo(0);
+        assertThat(barbaraJson.size()).isZero();
     }
 }

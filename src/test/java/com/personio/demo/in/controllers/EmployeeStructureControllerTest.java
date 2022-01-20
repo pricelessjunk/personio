@@ -1,8 +1,11 @@
-package com.personio.demo.controllers;
+package com.personio.demo.in.controllers;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.personio.demo.usecases.StructureUseCase;
+import com.personio.demo.domain.usecases.StructureUseCase;
+import com.personio.demo.domain.usecases.StructureVerificationUsecase;
+import com.personio.demo.exceptions.CyclicStructureException;
+import com.personio.demo.exceptions.MultipleRootSupervisorException;
 import io.quarkus.test.common.http.TestHTTPEndpoint;
 import io.quarkus.test.junit.QuarkusTest;
 import io.quarkus.test.junit.mockito.InjectMock;
@@ -25,17 +28,17 @@ import static org.mockito.Mockito.when;
 class EmployeeStructureControllerTest {
 
     @InjectMock
-    private StructureUseCase useCase;
+    StructureUseCase useCase;
 
-    private EmployeeStructureController controller;
+//    private EmployeeStructureController controller;
 
     @BeforeEach
     public void setUp() {
-        this.controller = new EmployeeStructureController(useCase);
+//        this.controller = new EmployeeStructureController(useCase);
     }
 
     @Test
-    void testOrganize() throws JsonProcessingException {
+    void testOrganize() throws JsonProcessingException, MultipleRootSupervisorException, CyclicStructureException {
         Map<String, String> input = new HashMap<>();
         input.put("Pete", "Nick");
         input.put("Barbara", "Nick");

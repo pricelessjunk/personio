@@ -1,4 +1,4 @@
-package com.personio.demo.usecases;
+package com.personio.demo.domain.usecases;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -16,6 +16,10 @@ public class Node {
     public void addChild(Node child) {
         children.add(child);
         child.setParent(this);
+    }
+
+    public boolean isNameSame(String name) {
+        return name.equals(this.name);
     }
 
     public boolean isRoot() {
