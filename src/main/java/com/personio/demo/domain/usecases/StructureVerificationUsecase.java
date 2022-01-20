@@ -1,6 +1,5 @@
 package com.personio.demo.domain.usecases;
 
-import com.personio.demo.domain.entities.CyclicPair;
 import com.personio.demo.exceptions.CyclicStructureException;
 import com.personio.demo.exceptions.MultipleRootSupervisorException;
 
@@ -20,43 +19,32 @@ public class StructureVerificationUsecase {
         List<String> roots = new ArrayList<>();
 
         tracker.forEach((key, value) -> {
-            if( value.getParent() == null) {
+            if(value.getParent() == null) {
                 roots.add(value.getName());
             }
         });
 
         if(roots.size() > 1) {
-            String message = "Multiple root supervisors found: " + roots.stream().collect(Collectors.joining(","));
+            String message = "Multiple root supervisors found: " + roots.stream().collect(Collectors.joining(", "));
             throw new MultipleRootSupervisorException(message);
         }
     }
 
     public void verifyCyclicReference(Map<String, Node> tracker) throws CyclicStructureException {
-        List<CyclicPair> cyclicPairs = new ArrayList<>();
-
-        tracker.forEach((key, value) -> {
-            for(Node child : value.getChildren()) {
-                if (checkChildInParent(child.getName(), child.getParent())) {
-                    cyclicPairs.add(new CyclicPair(child.getParent().getName(), child.getName()));
-                }
+        for(Node current : tracker.values()){
+            if (checkChildInParent(current, current.getParent())) {
+                throw new CyclicStructureException("A cycle has been detected for the person " + current.getName());
             }
-        });
-
-        if (!cyclicPairs.isEmpty()) {
-            String message = cyclicPairs
-                    .stream().map(CyclicPair::toString)
-                    .collect(Collectors.joining("\n"));
-            throw new CyclicStructureException(message);
         }
     }
 
-    private boolean checkChildInParent(String childName, Node parent) {
+    private boolean checkChildInParent(Node current, Node parent) {
         if (parent == null) {
             return false;
-        } else if (parent.isNameSame(childName)) {
+        } else if (parent.isNameSame(current.getName())) {
             return true;
         } else {
-            return checkChildInParent(childName, parent.getParent());
+            return checkChildInParent(current, parent.getParent());
         }
     }
 

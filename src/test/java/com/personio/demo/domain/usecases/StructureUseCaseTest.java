@@ -1,5 +1,6 @@
 package com.personio.demo.domain.usecases;
 
+import com.personio.demo.domain.helper.StructureMapToNodeUtil;
 import com.personio.demo.exceptions.CyclicStructureException;
 import com.personio.demo.exceptions.MultipleRootSupervisorException;
 import org.junit.jupiter.api.BeforeEach;
@@ -10,6 +11,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyMap;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
@@ -21,7 +23,9 @@ class StructureUseCaseTest {
     @BeforeEach
     void init() {
         StructureVerificationUsecase mockStructureVerificationUsecase = mock(StructureVerificationUsecase.class);
-        this.useCase = new StructureUseCase(mockStructureVerificationUsecase);
+        StructureMapToNodeUtil mockUtil = mock(StructureMapToNodeUtil.class);
+        when(mockUtil.mapToNode(any())).thenCallRealMethod();
+        this.useCase = new StructureUseCase(mockStructureVerificationUsecase, mockUtil);
     }
 
     @Test

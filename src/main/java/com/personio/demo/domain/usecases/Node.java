@@ -1,8 +1,11 @@
 package com.personio.demo.domain.usecases;
 
+import lombok.Getter;
+
 import java.util.ArrayList;
 import java.util.List;
 
+@Getter
 public class Node {
     private String name;
     private Node parent;
@@ -28,17 +31,5 @@ public class Node {
 
     public void setParent(Node parent) {
         this.parent = parent;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public Node getParent() {
-        return parent;
-    }
-
-    public List<Node> getChildren() {
-        return children;
     }
 }

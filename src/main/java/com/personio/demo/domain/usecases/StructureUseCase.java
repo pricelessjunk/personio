@@ -1,5 +1,6 @@
 package com.personio.demo.domain.usecases;
 
+import com.personio.demo.domain.helper.StructureMapToNodeUtil;
 import com.personio.demo.exceptions.CyclicStructureException;
 import com.personio.demo.exceptions.MultipleRootSupervisorException;
 
@@ -8,7 +9,6 @@ import javax.inject.Inject;
 import javax.json.Json;
 import javax.json.JsonObject;
 import javax.json.JsonObjectBuilder;
-import java.util.HashMap;
 import java.util.Map;
 
 /**
@@ -19,21 +19,24 @@ import java.util.Map;
 public class StructureUseCase {
 
     StructureVerificationUsecase verificationUsecase;
+    StructureMapToNodeUtil util;
 
     @Inject
-    public StructureUseCase(StructureVerificationUsecase verificationUsecase) {
+    public StructureUseCase(StructureVerificationUsecase verificationUsecase, StructureMapToNodeUtil util) {
         this.verificationUsecase = verificationUsecase;
+        this.util = util;
     }
 
+    /**
+     * Parse the hierarchy and generate the json structure.
+     *
+     * @param inputStructure the input dictionary
+     * @return Returns the parsed json object
+     * @throws MultipleRootSupervisorException thrown when more than one root supervisors are detected
+     * @throws CyclicStructureException thrown when a cycle structure is detected
+     */
     public JsonObject parseHierarchy(Map<String, String> inputStructure) throws MultipleRootSupervisorException, CyclicStructureException {
-        Map<String, Node> tracker = new HashMap<>();
-
-        inputStructure.forEach((key, value) -> {
-            tracker.putIfAbsent(key, new Node(key));
-            tracker.putIfAbsent(value, new Node(value));
-
-            tracker.get(value).addChild(tracker.get(key));
-        });
+        Map<String, Node> tracker = util.mapToNode(inputStructure);
 
         verificationUsecase.verifyMultipleRoot(tracker);
         verificationUsecase.verifyCyclicReference(tracker);
