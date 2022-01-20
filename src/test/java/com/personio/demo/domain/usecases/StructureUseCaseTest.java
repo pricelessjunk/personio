@@ -10,6 +10,9 @@ import java.util.HashMap;
 import java.util.Map;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.ArgumentMatchers.anyMap;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 
 class StructureUseCaseTest {
 
@@ -17,11 +20,12 @@ class StructureUseCaseTest {
 
     @BeforeEach
     void init() {
-        this.useCase = new StructureUseCase(new StructureVerificationUsecase());
+        StructureVerificationUsecase mockStructureVerificationUsecase = mock(StructureVerificationUsecase.class);
+        this.useCase = new StructureUseCase(mockStructureVerificationUsecase);
     }
 
     @Test
-    void parseHierarchy() throws MultipleRootSupervisorException, CyclicStructureException {
+    void testParseHierarchy() throws MultipleRootSupervisorException, CyclicStructureException {
         Map<String, String> input = new HashMap<>();
         input.put("Pete", "Nick");
         input.put("Barbara", "Nick");

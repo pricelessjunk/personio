@@ -16,27 +16,6 @@ import java.util.Map;
 
 @Path("/employee")
 public class EmployeeStructureController {
-//
-//    @GET
-//    @Produces(MediaType.TEXT_PLAIN)
-//    public String hello() {
-//        return "Hello RESTEasy";
-//    }
-
-//    @GET
-//    @Path("/employees")
-//    @Produces(MediaType.APPLICATION_JSON)
-//    public Map<String, Object> data() {
-//        Map<String, Object> m = new HashMap<>();
-//        m.put("Pete", new HashMap<String, Object>());
-//        m.put("Barbara", new HashMap<String, Object>());
-//
-//        Map<String, Object> m2 = new HashMap<>();
-//        m2.put("Nick", m);
-//
-//        return m2;
-//    }
-
     StructureUseCase structureUseCase;
 
     @Inject

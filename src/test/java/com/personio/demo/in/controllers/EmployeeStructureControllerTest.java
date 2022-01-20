@@ -30,13 +30,6 @@ class EmployeeStructureControllerTest {
     @InjectMock
     StructureUseCase useCase;
 
-//    private EmployeeStructureController controller;
-
-    @BeforeEach
-    public void setUp() {
-//        this.controller = new EmployeeStructureController(useCase);
-    }
-
     @Test
     void testOrganize() throws JsonProcessingException, MultipleRootSupervisorException, CyclicStructureException {
         Map<String, String> input = new HashMap<>();
