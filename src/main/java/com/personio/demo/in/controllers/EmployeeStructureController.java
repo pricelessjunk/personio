@@ -9,6 +9,7 @@ import com.personio.demo.out.exceptions.SupervisorRepositoryException;
 import com.personio.demo.in.responses.SupervisorNameResponse;
 import org.jboss.resteasy.annotations.jaxrs.PathParam;
 
+import javax.annotation.security.RolesAllowed;
 import javax.inject.Inject;
 import javax.json.JsonObject;
 import javax.ws.rs.Consumes;
@@ -21,6 +22,7 @@ import javax.ws.rs.core.Response;
 import java.util.Map;
 
 @Path("/employee")
+@RolesAllowed("Admin")
 public class EmployeeStructureController {
     StructureUseCase structureUseCase;
     EmployeeUseCase employeeUseCase;

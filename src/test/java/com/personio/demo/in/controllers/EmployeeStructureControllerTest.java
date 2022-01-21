@@ -11,6 +11,7 @@ import com.personio.demo.out.exceptions.SupervisorRepositoryException;
 import io.quarkus.test.common.http.TestHTTPEndpoint;
 import io.quarkus.test.junit.QuarkusTest;
 import io.quarkus.test.junit.mockito.InjectMock;
+import io.quarkus.test.security.TestSecurity;
 import io.restassured.http.ContentType;
 import io.restassured.response.ValidatableResponse;
 import org.hamcrest.CoreMatchers;
@@ -27,6 +28,7 @@ import static org.mockito.Mockito.when;
 
 @QuarkusTest
 @TestHTTPEndpoint(EmployeeStructureController.class)
+@TestSecurity(authorizationEnabled = false)
 class EmployeeStructureControllerTest {
 
     @InjectMock
