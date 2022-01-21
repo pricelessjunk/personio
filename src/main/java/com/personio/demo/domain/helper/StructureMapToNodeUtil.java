@@ -1,10 +1,8 @@
 package com.personio.demo.domain.helper;
 
-import com.personio.demo.domain.usecases.Node;
+import com.personio.demo.domain.Node;
 
 import javax.enterprise.context.ApplicationScoped;
-import javax.json.JsonObject;
-import javax.json.JsonString;
 import java.util.HashMap;
 import java.util.Map;
 

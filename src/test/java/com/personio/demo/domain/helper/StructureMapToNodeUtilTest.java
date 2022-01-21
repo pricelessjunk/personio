@@ -1,19 +1,15 @@
 package com.personio.demo.domain.helper;
 
-import com.personio.demo.domain.usecases.Node;
+import com.personio.demo.domain.Node;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import javax.enterprise.context.RequestScoped;
-import javax.json.Json;
-import javax.json.JsonObject;
 
 import java.util.HashMap;
 import java.util.Map;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.in;
-import static org.junit.jupiter.api.Assertions.*;
 
 @RequestScoped
 class StructureMapToNodeUtilTest {

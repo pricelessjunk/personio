@@ -1,8 +1,12 @@
 package com.personio.demo.domain.usecases;
 
+import com.personio.demo.domain.Node;
 import com.personio.demo.domain.helper.StructureMapToNodeUtil;
+import com.personio.demo.domain.usecases.employee.EmployeeUseCase;
 import com.personio.demo.exceptions.CyclicStructureException;
 import com.personio.demo.exceptions.MultipleRootSupervisorException;
+import com.personio.demo.out.exceptions.EmployeeRepositoryException;
+import com.personio.demo.out.exceptions.SupervisorRepositoryException;
 
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
@@ -19,12 +23,14 @@ import java.util.Map;
 public class StructureUseCase {
 
     StructureVerificationUsecase verificationUsecase;
+    EmployeeUseCase employeeUseCase;
     StructureMapToNodeUtil util;
 
     @Inject
-    public StructureUseCase(StructureVerificationUsecase verificationUsecase, StructureMapToNodeUtil util) {
+    public StructureUseCase(StructureVerificationUsecase verificationUsecase, StructureMapToNodeUtil util, EmployeeUseCase employeeUseCase) {
         this.verificationUsecase = verificationUsecase;
         this.util = util;
+        this.employeeUseCase = employeeUseCase;
     }
 
     /**
@@ -35,11 +41,13 @@ public class StructureUseCase {
      * @throws MultipleRootSupervisorException thrown when more than one root supervisors are detected
      * @throws CyclicStructureException thrown when a cycle structure is detected
      */
-    public JsonObject parseHierarchy(Map<String, String> inputStructure) throws MultipleRootSupervisorException, CyclicStructureException {
+    public JsonObject parseHierarchy(Map<String, String> inputStructure) throws MultipleRootSupervisorException, CyclicStructureException, EmployeeRepositoryException, SupervisorRepositoryException {
         Map<String, Node> tracker = util.mapToNode(inputStructure);
 
         verificationUsecase.verifyMultipleRoot(tracker);
         verificationUsecase.verifyCyclicReference(tracker);
+
+        employeeUseCase.saveEmployees( tracker);
 
         Node topMostNode = tracker.values().stream().filter(Node::isRoot).findFirst().get();
         return Json.createObjectBuilder().add(topMostNode.getName(), this.generateJsonStructure(topMostNode)).build();

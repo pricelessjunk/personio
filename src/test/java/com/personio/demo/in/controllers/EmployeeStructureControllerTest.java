@@ -6,6 +6,8 @@ import com.personio.demo.domain.usecases.StructureUseCase;
 import com.personio.demo.domain.usecases.StructureVerificationUsecase;
 import com.personio.demo.exceptions.CyclicStructureException;
 import com.personio.demo.exceptions.MultipleRootSupervisorException;
+import com.personio.demo.out.exceptions.EmployeeRepositoryException;
+import com.personio.demo.out.exceptions.SupervisorRepositoryException;
 import io.quarkus.test.common.http.TestHTTPEndpoint;
 import io.quarkus.test.junit.QuarkusTest;
 import io.quarkus.test.junit.mockito.InjectMock;
@@ -31,7 +33,7 @@ class EmployeeStructureControllerTest {
     StructureUseCase useCase;
 
     @Test
-    void testOrganize() throws JsonProcessingException, MultipleRootSupervisorException, CyclicStructureException {
+    void testOrganize() throws JsonProcessingException, MultipleRootSupervisorException, CyclicStructureException, SupervisorRepositoryException, EmployeeRepositoryException {
         Map<String, String> input = new HashMap<>();
         input.put("Pete", "Nick");
         input.put("Barbara", "Nick");

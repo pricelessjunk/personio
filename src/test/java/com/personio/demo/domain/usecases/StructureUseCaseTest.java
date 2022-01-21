@@ -1,8 +1,11 @@
 package com.personio.demo.domain.usecases;
 
 import com.personio.demo.domain.helper.StructureMapToNodeUtil;
+import com.personio.demo.domain.usecases.employee.EmployeeUseCase;
 import com.personio.demo.exceptions.CyclicStructureException;
 import com.personio.demo.exceptions.MultipleRootSupervisorException;
+import com.personio.demo.out.exceptions.EmployeeRepositoryException;
+import com.personio.demo.out.exceptions.SupervisorRepositoryException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -12,7 +15,6 @@ import java.util.Map;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anyMap;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
@@ -24,12 +26,13 @@ class StructureUseCaseTest {
     void init() {
         StructureVerificationUsecase mockStructureVerificationUsecase = mock(StructureVerificationUsecase.class);
         StructureMapToNodeUtil mockUtil = mock(StructureMapToNodeUtil.class);
+        EmployeeUseCase mockEmployeeUseCase = mock(EmployeeUseCase.class);
         when(mockUtil.mapToNode(any())).thenCallRealMethod();
-        this.useCase = new StructureUseCase(mockStructureVerificationUsecase, mockUtil);
+        this.useCase = new StructureUseCase(mockStructureVerificationUsecase, mockUtil, mockEmployeeUseCase);
     }
 
     @Test
-    void testParseHierarchy() throws MultipleRootSupervisorException, CyclicStructureException {
+    void testParseHierarchy() throws MultipleRootSupervisorException, CyclicStructureException, EmployeeRepositoryException, SupervisorRepositoryException {
         Map<String, String> input = new HashMap<>();
         input.put("Pete", "Nick");
         input.put("Barbara", "Nick");

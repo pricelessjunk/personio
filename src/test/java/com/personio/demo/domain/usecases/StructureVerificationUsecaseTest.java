@@ -1,5 +1,6 @@
 package com.personio.demo.domain.usecases;
 
+import com.personio.demo.domain.Node;
 import com.personio.demo.domain.helper.StructureMapToNodeUtil;
 import com.personio.demo.exceptions.CyclicStructureException;
 import com.personio.demo.exceptions.MultipleRootSupervisorException;
