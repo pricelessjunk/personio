@@ -3,6 +3,8 @@ package com.personio.demo.out.repositories;
 import com.personio.demo.domain.Node;
 import com.personio.demo.out.exceptions.EmployeeRepositoryException;
 import com.personio.demo.out.exceptions.SupervisorRepositoryException;
+import io.quarkus.logging.Log;
+import io.smallrye.mutiny.Uni;
 import io.vertx.mutiny.pgclient.PgPool;
 import io.vertx.mutiny.sqlclient.Tuple;
 
@@ -12,6 +14,7 @@ import javax.transaction.Transactional;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.NoSuchElementException;
 import java.util.concurrent.ExecutionException;
 import java.util.stream.Collectors;
 
@@ -26,6 +29,31 @@ public class SupervisorRepository {
     public SupervisorRepository(EmployeeRepository empRepo, PgPool client) {
         this.empRepo = empRepo;
         this.client = client;
+    }
+
+    public String getEmployeeSupervisor(String name) throws SupervisorRepositoryException {
+        String selectQuery = "SELECT e.name FROM employeemgmt.supervisor s " +
+                " LEFT OUTER JOIN employeemgmt.employee e ON s.id_supervisor = e.id  " +
+                " WHERE s.id_employee = (SELECT id FROM employeemgmt.employee WHERE name = $1);";
+
+        try {
+            return client.preparedQuery(selectQuery)
+                    .execute(Tuple.of(name))
+                    .onItem().transform(pgRowSet -> pgRowSet.iterator().next().getString("name"))
+                    .onItem().transform(val -> val == null ? "No parent available" : val)
+                    .subscribeAsCompletionStage().get();
+        } catch (Exception e) {
+            Log.error(e);
+
+            String message;
+            if(e instanceof ExecutionException && e.getCause() instanceof NoSuchElementException) {
+                message = "Employee not found: " + name;
+            } else {
+                message = "An error when trying to get the employee's supervisor: " + name;
+            }
+
+            throw new SupervisorRepositoryException(message);
+        }
     }
 
     public void saveEmployees(Map<String, Node> tracker) throws EmployeeRepositoryException, SupervisorRepositoryException {

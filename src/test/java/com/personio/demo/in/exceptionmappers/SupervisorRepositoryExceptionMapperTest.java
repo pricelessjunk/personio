@@ -1,7 +1,7 @@
 package com.personio.demo.in.exceptionmappers;
 
-import com.personio.demo.exceptions.CyclicStructureException;
 import com.personio.demo.in.responses.ErrorResponse;
+import com.personio.demo.out.exceptions.SupervisorRepositoryException;
 import org.apache.http.HttpStatus;
 import org.junit.jupiter.api.Test;
 
@@ -9,17 +9,16 @@ import javax.ws.rs.core.Response;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-class CyclicStructureExceptionMapperTest {
+class SupervisorRepositoryExceptionMapperTest {
+    private final SupervisorRepositoryExceptionMapper exceptionMapper;
 
-    private final CyclicStructureExceptionMapper exceptionMapper;
-
-    CyclicStructureExceptionMapperTest() {
-        this.exceptionMapper = new CyclicStructureExceptionMapper();
+    SupervisorRepositoryExceptionMapperTest() {
+        this.exceptionMapper = new SupervisorRepositoryExceptionMapper();
     }
 
     @Test
     void toResponse() {
-        CyclicStructureException expectedException = new CyclicStructureException("Expected exception");
+        SupervisorRepositoryException expectedException = new SupervisorRepositoryException("Expected exception");
         Response response = exceptionMapper.toResponse(expectedException);
 
         assertThat(response.getStatus()).isEqualTo(HttpStatus.SC_BAD_REQUEST);

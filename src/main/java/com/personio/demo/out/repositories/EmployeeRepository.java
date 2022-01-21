@@ -26,12 +26,6 @@ public class EmployeeRepository {
         this.client = client;
     }
 
-//    public Long getEmployeeId(String name) {
-//        return client.preparedQuery("SELECT id FROM employeemgmt.employee WHERE name = $1")
-//                .execute(Tuple.of(1))
-//                .onItem().transform(pgRowSet -> pgRowSet.iterator().next().getString("name"));
-//    }
-
     public void saveEmployee(String name) throws EmployeeRepositoryException {
         try {
             client.preparedQuery("INSERT INTO employeemgmt.employee (name) VALUES ($1) ON CONFLICT DO NOTHING")

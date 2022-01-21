@@ -1,6 +1,7 @@
 package com.personio.demo.in.exceptionmappers;
 
 import com.personio.demo.exceptions.MultipleRootSupervisorException;
+import com.personio.demo.in.responses.ErrorResponse;
 import org.apache.http.HttpStatus;
 import org.junit.jupiter.api.Test;
 
@@ -22,6 +23,6 @@ class MultipleRootSupervisorExceptionMapperTest {
         Response response = exceptionMapper.toResponse(expectedException);
 
         assertThat(response.getStatus()).isEqualTo(HttpStatus.SC_BAD_REQUEST);
-        assertThat(response.getEntity()).hasToString("Expected exception");
+        assertThat(((ErrorResponse)response.getEntity()).getMessage()).hasToString("Expected exception");
     }
 }

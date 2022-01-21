@@ -6,6 +6,7 @@ import com.personio.demo.exceptions.CyclicStructureException;
 import com.personio.demo.exceptions.MultipleRootSupervisorException;
 import com.personio.demo.out.exceptions.EmployeeRepositoryException;
 import com.personio.demo.out.exceptions.SupervisorRepositoryException;
+import com.personio.demo.in.responses.SupervisorNameResponse;
 import org.jboss.resteasy.annotations.jaxrs.PathParam;
 
 import javax.inject.Inject;
@@ -18,7 +19,6 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import java.util.Map;
-import java.util.concurrent.ExecutionException;
 
 @Path("/employee")
 public class EmployeeStructureController {
@@ -42,9 +42,8 @@ public class EmployeeStructureController {
     @GET
     @Path("/supervisor/{name}")
     @Produces(MediaType.APPLICATION_JSON)
-    public Response getSupervisor(@PathParam String name) throws ExecutionException, InterruptedException {
-        return employeeUseCase.getEmployeeSupervisor(name)
-                .onItem().transform(sn -> sn != null ? Response.ok(sn) : Response.status(Response.Status.NOT_FOUND))
-                .onItem().transform(Response.ResponseBuilder::build).subscribeAsCompletionStage().get();
+    public Response getSupervisor(@PathParam String name) throws SupervisorRepositoryException {
+        String superVisorName =  employeeUseCase.getEmployeeSupervisor(name);
+        return Response.ok(new SupervisorNameResponse(superVisorName)).build();
     }
 }

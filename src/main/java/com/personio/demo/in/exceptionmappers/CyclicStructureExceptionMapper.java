@@ -2,6 +2,7 @@ package com.personio.demo.in.exceptionmappers;
 
 import com.personio.demo.exceptions.CyclicStructureException;
 import com.personio.demo.exceptions.MultipleRootSupervisorException;
+import com.personio.demo.in.responses.ErrorResponse;
 
 import javax.ws.rs.core.Response;
 import javax.ws.rs.ext.ExceptionMapper;
@@ -16,7 +17,7 @@ public class CyclicStructureExceptionMapper implements ExceptionMapper<CyclicStr
     @Override
     public Response toResponse(CyclicStructureException e) {
         return Response.status(Response.Status.BAD_REQUEST)
-                .entity(e.getMessage())
+                .entity(new ErrorResponse(e.getMessage()))
                 .build();
     }
 }

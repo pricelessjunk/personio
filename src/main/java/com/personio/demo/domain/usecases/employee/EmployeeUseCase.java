@@ -5,7 +5,6 @@ import com.personio.demo.out.exceptions.SupervisorRepositoryException;
 import com.personio.demo.out.repositories.EmployeeRepository;
 import com.personio.demo.out.exceptions.EmployeeRepositoryException;
 import com.personio.demo.out.repositories.SupervisorRepository;
-import io.smallrye.mutiny.Uni;
 
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
@@ -26,7 +25,7 @@ public class EmployeeUseCase {
         this.supervisorRepo.saveEmployees(tracker);
     }
 
-    public Uni<String> getEmployeeSupervisor(String name) {
-        return null;//this.supervisorRepo.getEmployeeSupervisor(name);
+    public String getEmployeeSupervisor(String name) throws SupervisorRepositoryException {
+        return this.supervisorRepo.getEmployeeSupervisor(name);
     }
 }
