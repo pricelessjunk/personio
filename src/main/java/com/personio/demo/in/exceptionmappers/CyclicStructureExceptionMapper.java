@@ -14,6 +14,12 @@ import javax.ws.rs.ext.Provider;
 @Provider
 public class CyclicStructureExceptionMapper implements ExceptionMapper<CyclicStructureException> {
 
+    /**
+     * Returns the response when the exception occurs
+     *
+     * @param e the exception
+     * @return the response with the exception message wrapped in a class
+     */
     @Override
     public Response toResponse(CyclicStructureException e) {
         return Response.status(Response.Status.BAD_REQUEST)

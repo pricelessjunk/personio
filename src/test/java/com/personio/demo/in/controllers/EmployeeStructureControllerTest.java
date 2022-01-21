@@ -2,7 +2,8 @@ package com.personio.demo.in.controllers;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.personio.demo.domain.usecases.StructureUseCase;
+import com.personio.demo.domain.usecases.employee.EmployeeUseCase;
+import com.personio.demo.domain.usecases.structure.StructureUseCase;
 import com.personio.demo.domain.exceptions.CyclicStructureException;
 import com.personio.demo.domain.exceptions.MultipleRootSupervisorException;
 import com.personio.demo.out.exceptions.EmployeeRepositoryException;
@@ -14,6 +15,8 @@ import io.quarkus.test.security.TestSecurity;
 import io.restassured.http.ContentType;
 import io.restassured.response.ValidatableResponse;
 import org.hamcrest.CoreMatchers;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import javax.json.Json;
@@ -22,6 +25,8 @@ import java.util.Map;
 
 import static io.restassured.RestAssured.given;
 import static org.mockito.ArgumentMatchers.anyMap;
+import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
 @QuarkusTest
@@ -31,6 +36,9 @@ class EmployeeStructureControllerTest {
 
     @InjectMock
     StructureUseCase useCase;
+
+    @InjectMock
+    EmployeeUseCase employeeUseCase;
 
     @Test
     void testOrganize() throws JsonProcessingException, MultipleRootSupervisorException, CyclicStructureException, SupervisorRepositoryException, EmployeeRepositoryException {
@@ -48,6 +56,18 @@ class EmployeeStructureControllerTest {
 
         response.statusCode(200);
         response.body("supervisor.size()", CoreMatchers.is(0));
+    }
+
+    @Test
+    void testGetSupervisor() throws SupervisorRepositoryException {
+        when(employeeUseCase.getEmployeeSupervisor(anyString())).thenReturn("dummy supervisor");
+
+        ValidatableResponse response = given().contentType(ContentType.JSON)
+                .when().get("/supervisor/some_employee")
+                .then();
+
+        response.statusCode(200);
+        response.body("name", CoreMatchers.is("dummy supervisor"));
     }
 
     /**

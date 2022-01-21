@@ -1,6 +1,6 @@
 package com.personio.demo.domain.helper;
 
-import com.personio.demo.domain.Node;
+import com.personio.demo.domain.entities.Node;
 
 import javax.enterprise.context.ApplicationScoped;
 import java.util.HashMap;
@@ -12,6 +12,12 @@ import java.util.Map;
 @ApplicationScoped
 public class StructureMapToNodeUtil {
 
+    /**
+     * This method maps a dictionary to a name to {@link Node} map.
+     *
+     * @param inputStructure the input dictionary
+     * @return the string to {@link Node} map
+     */
     public Map<String, Node> mapToNode(Map<String, String> inputStructure) {
         Map<String, Node> tracker = new HashMap<>();
 

@@ -1,6 +1,6 @@
-package com.personio.demo.domain.usecases;
+package com.personio.demo.domain.usecases.structure;
 
-import com.personio.demo.domain.Node;
+import com.personio.demo.domain.entities.Node;
 import com.personio.demo.domain.helper.StructureMapToNodeUtil;
 import com.personio.demo.domain.usecases.employee.EmployeeUseCase;
 import com.personio.demo.domain.exceptions.CyclicStructureException;
@@ -26,11 +26,18 @@ public class StructureUseCase {
     EmployeeUseCase employeeUseCase;
     StructureMapToNodeUtil util;
 
+    /**
+     * Constructor
+     *
+     * @param verificationUsecase the use case for verification of the structure
+     * @param employeeUseCase the use case to process the employee related jobs
+     * @param util a helper util class
+     */
     @Inject
-    public StructureUseCase(StructureVerificationUsecase verificationUsecase, StructureMapToNodeUtil util, EmployeeUseCase employeeUseCase) {
+    public StructureUseCase(StructureVerificationUsecase verificationUsecase, EmployeeUseCase employeeUseCase,  StructureMapToNodeUtil util) {
         this.verificationUsecase = verificationUsecase;
-        this.util = util;
         this.employeeUseCase = employeeUseCase;
+        this.util = util;
     }
 
     /**
@@ -47,7 +54,7 @@ public class StructureUseCase {
         verificationUsecase.verifyMultipleRoot(tracker);
         verificationUsecase.verifyCyclicReference(tracker);
 
-        employeeUseCase.saveEmployees( tracker);
+        employeeUseCase.saveEmployees(tracker);
 
         Node topMostNode = tracker.values().stream().filter(Node::isRoot).findFirst().get();
         return Json.createObjectBuilder().add(topMostNode.getName(), this.generateJsonStructure(topMostNode)).build();

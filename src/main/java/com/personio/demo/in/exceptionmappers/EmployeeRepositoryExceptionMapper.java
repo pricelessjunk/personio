@@ -12,6 +12,13 @@ import javax.ws.rs.ext.Provider;
  */
 @Provider
 public class EmployeeRepositoryExceptionMapper implements ExceptionMapper<EmployeeRepositoryException> {
+
+    /**
+     * Returns the response when the exception occurs
+     *
+     * @param e the exception
+     * @return the response with the exception message wrapped in a class
+     */
     @Override
     public Response toResponse(EmployeeRepositoryException e) {
         return Response.status(Response.Status.BAD_REQUEST)

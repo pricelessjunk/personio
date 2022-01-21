@@ -1,6 +1,6 @@
 package com.personio.demo.out.repositories;
 
-import com.personio.demo.domain.Node;
+import com.personio.demo.domain.entities.Node;
 import com.personio.demo.domain.helper.StructureMapToNodeUtil;
 import com.personio.demo.out.exceptions.EmployeeRepositoryException;
 import com.personio.demo.out.exceptions.SupervisorRepositoryException;

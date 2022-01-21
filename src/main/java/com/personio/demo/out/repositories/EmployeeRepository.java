@@ -10,15 +10,29 @@ import javax.inject.Inject;
 import java.util.NoSuchElementException;
 import java.util.concurrent.ExecutionException;
 
+/**
+ * The employee repository class
+ */
 @ApplicationScoped
 public class EmployeeRepository {
     PgPool client;
 
+    /**
+     * Constructor
+     *
+     * @param client the pg pool reactive client
+     */
     @Inject
     public EmployeeRepository(PgPool client) {
         this.client = client;
     }
 
+    /**
+     * Gets the name of an employee from its id
+     * @param id the id
+     * @return the name
+     * @throws EmployeeRepositoryException thrown when an error occurs
+     */
     public String getById(Long id) throws EmployeeRepositoryException {
         try {
             return client.preparedQuery("SELECT name FROM employeemgmt.employee WHERE id = $1 ")
@@ -39,6 +53,12 @@ public class EmployeeRepository {
         }
     }
 
+    /**
+     * Saves an employee by its name
+     *
+     * @param name the name
+     * @throws EmployeeRepositoryException thrown when an error occurs
+     */
     public void saveEmployee(String name) throws EmployeeRepositoryException {
         try {
             client.preparedQuery("INSERT INTO employeemgmt.employee (name) VALUES ($1) ON CONFLICT DO NOTHING")

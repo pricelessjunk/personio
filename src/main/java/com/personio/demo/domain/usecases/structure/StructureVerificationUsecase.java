@@ -1,6 +1,6 @@
-package com.personio.demo.domain.usecases;
+package com.personio.demo.domain.usecases.structure;
 
-import com.personio.demo.domain.Node;
+import com.personio.demo.domain.entities.Node;
 import com.personio.demo.domain.exceptions.CyclicStructureException;
 import com.personio.demo.domain.exceptions.MultipleRootSupervisorException;
 
@@ -16,6 +16,12 @@ import java.util.stream.Collectors;
 @ApplicationScoped
 public class StructureVerificationUsecase {
 
+    /**
+     * Verifies if multiple roots are present in the hierarchical structure
+     *
+     * @param tracker the name tp {@link Node} map
+     * @throws MultipleRootSupervisorException thrown when multiple roots are in the hierarchy
+     */
     public void verifyMultipleRoot(Map<String, Node> tracker) throws MultipleRootSupervisorException {
         List<String> roots = new ArrayList<>();
 
@@ -31,6 +37,12 @@ public class StructureVerificationUsecase {
         }
     }
 
+    /**
+     * Verifies if a cycle is present in the hierarchical structure
+     *
+     * @param tracker the name tp {@link Node} map
+     * @throws CyclicStructureException thrown when a cycle is detected in the hierarchy
+     */
     public void verifyCyclicReference(Map<String, Node> tracker) throws CyclicStructureException {
         for(Node current : tracker.values()){
             if (checkChildInParent(current, current.getParent())) {
@@ -39,6 +51,14 @@ public class StructureVerificationUsecase {
         }
     }
 
+    /**
+     * This method recursively checks if a node is also present in any of its parent,
+     * It is used to detect cycles.
+     *
+     * @param current the current node
+     * @param parent the parent node
+     * @return true if it is present, else false
+     */
     private boolean checkChildInParent(Node current, Node parent) {
         if (parent == null) {
             return false;

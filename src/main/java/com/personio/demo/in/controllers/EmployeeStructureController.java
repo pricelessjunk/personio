@@ -1,6 +1,6 @@
 package com.personio.demo.in.controllers;
 
-import com.personio.demo.domain.usecases.StructureUseCase;
+import com.personio.demo.domain.usecases.structure.StructureUseCase;
 import com.personio.demo.domain.usecases.employee.EmployeeUseCase;
 import com.personio.demo.domain.exceptions.CyclicStructureException;
 import com.personio.demo.domain.exceptions.MultipleRootSupervisorException;
@@ -27,12 +27,28 @@ public class EmployeeStructureController {
     StructureUseCase structureUseCase;
     EmployeeUseCase employeeUseCase;
 
+    /**
+     * Constructor
+     *
+     * @param structureUseCase the use case for structures
+     * @param employeeUseCase the use case for employees
+     */
     @Inject
     public EmployeeStructureController(StructureUseCase structureUseCase, EmployeeUseCase employeeUseCase) {
         this.structureUseCase = structureUseCase;
         this.employeeUseCase = employeeUseCase;
     }
 
+    /**
+     * This method is the endpoint to recieve the dictionary
+     *
+     * @param employees the dictionary
+     * @return a response with the new hierarchical structure
+     * @throws CyclicStructureException thrown when a cycle is detected in the hierarchy
+     * @throws MultipleRootSupervisorException thrown when multiple roots are in the hierarchy
+     * @throws EmployeeRepositoryException thrown when an error occurred in the employee repository
+     * @throws SupervisorRepositoryException thrown when an error occurred in the supervisor repository
+     */
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
@@ -41,6 +57,13 @@ public class EmployeeStructureController {
         return Response.ok(responseBody).build();
     }
 
+    /**
+     * This endpoint allows to retrieve the supervisor of the given employee
+     *
+     * @param name the name of the employee
+     * @return a response with the supervisors name
+     * @throws SupervisorRepositoryException thrown when an error occurred in the supervisor repository
+     */
     @GET
     @Path("/supervisor/{name}")
     @Produces(MediaType.APPLICATION_JSON)

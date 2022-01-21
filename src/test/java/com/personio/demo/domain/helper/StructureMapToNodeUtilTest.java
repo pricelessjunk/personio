@@ -1,6 +1,6 @@
 package com.personio.demo.domain.helper;
 
-import com.personio.demo.domain.Node;
+import com.personio.demo.domain.entities.Node;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
