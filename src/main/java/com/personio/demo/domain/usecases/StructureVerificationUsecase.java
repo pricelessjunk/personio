@@ -1,8 +1,8 @@
 package com.personio.demo.domain.usecases;
 
 import com.personio.demo.domain.Node;
-import com.personio.demo.exceptions.CyclicStructureException;
-import com.personio.demo.exceptions.MultipleRootSupervisorException;
+import com.personio.demo.domain.exceptions.CyclicStructureException;
+import com.personio.demo.domain.exceptions.MultipleRootSupervisorException;
 
 import javax.enterprise.context.ApplicationScoped;
 import java.util.ArrayList;

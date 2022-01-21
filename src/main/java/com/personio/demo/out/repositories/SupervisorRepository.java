@@ -4,14 +4,12 @@ import com.personio.demo.domain.Node;
 import com.personio.demo.out.exceptions.EmployeeRepositoryException;
 import com.personio.demo.out.exceptions.SupervisorRepositoryException;
 import io.quarkus.logging.Log;
-import io.smallrye.mutiny.Uni;
 import io.vertx.mutiny.pgclient.PgPool;
 import io.vertx.mutiny.sqlclient.Tuple;
 
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
 import javax.transaction.Transactional;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.NoSuchElementException;

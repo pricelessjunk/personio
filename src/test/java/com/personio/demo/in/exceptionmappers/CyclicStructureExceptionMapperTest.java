@@ -1,6 +1,6 @@
 package com.personio.demo.in.exceptionmappers;
 
-import com.personio.demo.exceptions.CyclicStructureException;
+import com.personio.demo.domain.exceptions.CyclicStructureException;
 import com.personio.demo.in.responses.ErrorResponse;
 import org.apache.http.HttpStatus;
 import org.junit.jupiter.api.Test;

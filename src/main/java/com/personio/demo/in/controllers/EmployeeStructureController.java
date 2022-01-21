@@ -2,8 +2,8 @@ package com.personio.demo.in.controllers;
 
 import com.personio.demo.domain.usecases.StructureUseCase;
 import com.personio.demo.domain.usecases.employee.EmployeeUseCase;
-import com.personio.demo.exceptions.CyclicStructureException;
-import com.personio.demo.exceptions.MultipleRootSupervisorException;
+import com.personio.demo.domain.exceptions.CyclicStructureException;
+import com.personio.demo.domain.exceptions.MultipleRootSupervisorException;
 import com.personio.demo.out.exceptions.EmployeeRepositoryException;
 import com.personio.demo.out.exceptions.SupervisorRepositoryException;
 import com.personio.demo.in.responses.SupervisorNameResponse;
