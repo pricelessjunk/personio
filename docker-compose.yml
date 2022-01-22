@@ -19,35 +19,36 @@ services:
       - POSTGRES_DB=employee
       - POSTGRES_USER=postgres
       - POSTGRES_PASSWORD=postgres
-#    networks:
-#      - quarkus
+    networks:
+      - quarkus
 
   #Back-end Quarkus Application
-#  employee-app:
-#    #The docker file in employee-app build the jar and provides the docker image with the following name.
-#    build:
-#      context: .
-#      dockerfile: src/main/docker/Dockerfile.jvm
-#    container_name: employee-app
-#
-#    #Environment variables for Spring Boot Application.
-#    environment:
-#      - DB_SERVER=personio-postgres
-#      - POSTGRES_DB=employee
-#      - POSTGRES_USER=postgres
-#      - POSTGRES_PASSWORD=postgres
-#    ports:
-#      - 8080:8080 # Forward the exposed port 8080 on the container to port 8080 on the host machine
-##    links:
-#    depends_on:
-#      - personio-postgres
-##    networks:
-##      - quarkus
+  employee-app:
+    image: quarkus/employee-system-jvm
+    #The docker file in employee-app build the jar and provides the docker image with the following name.
+    build:
+      context: .
+      dockerfile: src/main/docker/Dockerfile.jvm
+    container_name: employee-app
+
+    #Environment variables for Spring Boot Application.
+    environment:
+      - DB_SERVER=personio-postgres
+      - POSTGRES_DB=employee
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+    ports:
+      - 8080:8080 # Forward the exposed port 8080 on the container to port 8080 on the host machine
+#    links:
+    depends_on:
+      - personio-postgres
+    networks:
+      - quarkus
 
 #Volumes for DB data
 volumes:
   personio-data:
 
-#networks:
-#  quarkus:
-#    driver: bridge
+networks:
+  quarkus:
+    driver: bridge

@@ -1,5 +1,38 @@
 # employee-system Project
 
+This is a demo project to showcase the architectural depth.
+
+## Pre requisites
+
+```
+docker
+```
+
+## Clone the project
+
+```shell script
+git clone https://github.com/pricelessjunk/personio.git
+```
+
+## Run tests
+
+```shell script
+> mvnw clean package -DskipTests
+> docker-compose up personio-postgres   # Start the db
+> mvnw test                             # db needed for the integration tests
+``` 
+
+## Run Service
+
+```shell script
+> mvnw clean package -DskipTests
+> docker-compose build
+> docker-compose up
+``` 
+
+
+
+
 This project uses Quarkus, the Supersonic Subatomic Java Framework.
 
 If you want to learn more about Quarkus, please visit its website: https://quarkus.io/ .
