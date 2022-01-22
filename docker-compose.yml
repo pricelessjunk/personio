@@ -31,7 +31,7 @@ services:
       dockerfile: src/main/docker/Dockerfile.jvm
     container_name: employee-app
 
-    #Environment variables for Spring Boot Application.
+    #Environment variables for Quarkus Application.
     environment:
       - DB_SERVER=personio-postgres
       - POSTGRES_DB=employee
