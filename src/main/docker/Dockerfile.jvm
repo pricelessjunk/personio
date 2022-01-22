@@ -35,6 +35,7 @@ COPY --chown=185 target/quarkus-app/app/ /deployments/app/
 COPY --chown=185 target/quarkus-app/quarkus/ /deployments/quarkus/
 
 EXPOSE 8080
+EXPOSE 5433
 USER 185
 
 ENTRYPOINT [ "java", "-jar", "/deployments/quarkus-run.jar" ]
