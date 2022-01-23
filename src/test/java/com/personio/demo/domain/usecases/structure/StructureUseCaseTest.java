@@ -6,6 +6,7 @@ import com.personio.demo.domain.commons.StructureMapToNodeUtil;
 import com.personio.demo.domain.usecases.employee.EmployeeUseCase;
 import com.personio.demo.out.exceptions.EmployeeRepositoryException;
 import com.personio.demo.out.exceptions.SupervisorRepositoryException;
+import io.vertx.mutiny.pgclient.PgPool;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -39,7 +40,7 @@ class StructureUseCaseTest {
         input.put("Nick", "Sophie");
         input.put("Sophie", "Jonas");
 
-        JsonObject parentJson = useCase.parseHierarchy(input);
+        JsonObject parentJson = useCase.parseHierarchy(mock(PgPool.class), input);
 
         JsonObject jonasJson = parentJson.get("Jonas").asJsonObject();
         assertThat(jonasJson.size()).isEqualTo(1);

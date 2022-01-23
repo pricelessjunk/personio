@@ -7,6 +7,7 @@ import com.personio.demo.domain.exceptions.MultipleRootSupervisorException;
 import com.personio.demo.out.exceptions.EmployeeRepositoryException;
 import com.personio.demo.out.exceptions.SupervisorRepositoryException;
 import com.personio.demo.in.dto.SupervisorNameResponseData;
+import io.vertx.mutiny.pgclient.PgPool;
 import org.jboss.resteasy.annotations.jaxrs.PathParam;
 
 import javax.annotation.security.RolesAllowed;
@@ -26,6 +27,7 @@ import java.util.Map;
 public class EmployeeStructureController {
     StructureUseCase structureUseCase;
     EmployeeUseCase employeeUseCase;
+    PgPool client;
 
     /**
      * Constructor
@@ -34,9 +36,10 @@ public class EmployeeStructureController {
      * @param employeeUseCase the use case for employees
      */
     @Inject
-    public EmployeeStructureController(StructureUseCase structureUseCase, EmployeeUseCase employeeUseCase) {
+    public EmployeeStructureController(StructureUseCase structureUseCase, EmployeeUseCase employeeUseCase, PgPool client) {
         this.structureUseCase = structureUseCase;
         this.employeeUseCase = employeeUseCase;
+        this.client = client;
     }
 
     /**
@@ -44,16 +47,12 @@ public class EmployeeStructureController {
      *
      * @param employees the dictionary
      * @return a response with the new hierarchical structure
-     * @throws CyclicStructureException thrown when a cycle is detected in the hierarchy
-     * @throws MultipleRootSupervisorException thrown when multiple roots are in the hierarchy
-     * @throws EmployeeRepositoryException thrown when an error occurred in the employee repository
-     * @throws SupervisorRepositoryException thrown when an error occurred in the supervisor repository
      */
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    public Response organize(Map<String, String> employees) throws CyclicStructureException, MultipleRootSupervisorException, EmployeeRepositoryException, SupervisorRepositoryException {
-        JsonObject responseBody = structureUseCase.parseHierarchy(employees);
+    public Response organize(Map<String, String> employees) {
+        JsonObject responseBody = structureUseCase.parseHierarchy(client, employees);
         return Response.ok(responseBody).build();
     }
 
@@ -68,7 +67,7 @@ public class EmployeeStructureController {
     @Path("/supervisor/{name}")
     @Produces(MediaType.APPLICATION_JSON)
     public Response getSupervisor(@PathParam String name) throws SupervisorRepositoryException {
-        SupervisorNameResponseData response =  employeeUseCase.getEmployeeSupervisors(name);
+        SupervisorNameResponseData response = employeeUseCase.getEmployeeSupervisors(client, name);
         return Response.ok(response).build();
     }
 }

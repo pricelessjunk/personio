@@ -23,8 +23,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import static io.restassured.RestAssured.given;
-import static org.mockito.ArgumentMatchers.anyMap;
-import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
@@ -47,7 +46,7 @@ class EmployeeStructureControllerTest {
         input.put("Nick", "Sophie");
         input.put("Sophie", "Jonas");
 
-        when(useCase.parseHierarchy(anyMap())).thenReturn(Json.createObjectBuilder().add("supervisor", Json.createObjectBuilder().build()).build());
+        when(useCase.parseHierarchy(any(), anyMap())).thenReturn(Json.createObjectBuilder().add("supervisor", Json.createObjectBuilder().build()).build());
 
         ValidatableResponse response = given().contentType(ContentType.JSON)
                 .when().body(asJsonString(input)).post()
@@ -59,7 +58,7 @@ class EmployeeStructureControllerTest {
 
     @Test
     void testGetSupervisor() throws SupervisorRepositoryException {
-        when(employeeUseCase.getEmployeeSupervisors(anyString())).thenReturn(SupervisorNameResponseData.of("dummy supervisor", "supervisors supervisor"));
+        when(employeeUseCase.getEmployeeSupervisors(any(), anyString())).thenReturn(SupervisorNameResponseData.of("dummy supervisor", "supervisors supervisor"));
 
         ValidatableResponse response = given().contentType(ContentType.JSON)
                 .when().get("/supervisor/some_employee")

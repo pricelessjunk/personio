@@ -3,11 +3,14 @@ package com.personio.demo.out.repositories;
 import com.personio.demo.out.exceptions.EmployeeRepositoryException;
 import io.quarkus.test.TestTransaction;
 import io.quarkus.test.junit.QuarkusTest;
+import io.vertx.mutiny.pgclient.PgPool;
 import org.flywaydb.core.Flyway;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
 
 import javax.inject.Inject;
+
+import java.util.concurrent.ExecutionException;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -17,12 +20,11 @@ class EmployeeRepositoryIntegrationTest {
     @Inject
     Flyway flyway;
 
-    EmployeeRepository repo;
+    @Inject
+    PgPool client;
 
     @Inject
-    public EmployeeRepositoryIntegrationTest(EmployeeRepository repo) {
-        this.repo = repo;
-    }
+    EmployeeRepository repo;
 
     @AfterEach
     void cleanup() {
@@ -31,10 +33,10 @@ class EmployeeRepositoryIntegrationTest {
     }
 
     @Test
-    void testSave() throws EmployeeRepositoryException {
+    void testSave() throws EmployeeRepositoryException, ExecutionException, InterruptedException {
         String name = "Test user";
-        repo.saveEmployee(name);
-        String savedName = repo.getById(1L);
+        client.withTransaction(conn -> repo.saveEmployee(conn, name)).subscribeAsCompletionStage().get();
+        String savedName = repo.getById(client,1L);
         assertThat(savedName).isEqualTo(name);
     }
 }

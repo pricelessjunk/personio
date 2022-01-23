@@ -5,7 +5,7 @@ import com.personio.demo.out.repositories.SupervisorRepository;
 /**
  * An exception that represents an error in the {@link SupervisorRepository}
  */
-public class SupervisorRepositoryException extends Exception {
+public class SupervisorRepositoryException extends RuntimeException {
     /**
      * Constructor
      *

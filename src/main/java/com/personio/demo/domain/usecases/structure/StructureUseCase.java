@@ -7,6 +7,7 @@ import com.personio.demo.domain.exceptions.CyclicStructureException;
 import com.personio.demo.domain.exceptions.MultipleRootSupervisorException;
 import com.personio.demo.out.exceptions.EmployeeRepositoryException;
 import com.personio.demo.out.exceptions.SupervisorRepositoryException;
+import io.vertx.mutiny.pgclient.PgPool;
 
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
@@ -43,18 +44,17 @@ public class StructureUseCase {
     /**
      * Parse the hierarchy and generate the json structure.
      *
+     * @param client the reactive database client
      * @param inputStructure the input dictionary
      * @return Returns the parsed json object
-     * @throws MultipleRootSupervisorException thrown when more than one root supervisors are detected
-     * @throws CyclicStructureException thrown when a cycle structure is detected
      */
-    public JsonObject parseHierarchy(Map<String, String> inputStructure) throws MultipleRootSupervisorException, CyclicStructureException, EmployeeRepositoryException, SupervisorRepositoryException {
+    public JsonObject parseHierarchy(PgPool client, Map<String, String> inputStructure)  {
         Map<String, Node> tracker = util.mapToNode(inputStructure);
 
         verificationUsecase.verifyMultipleRoot(tracker);
         verificationUsecase.verifyCyclicReference(tracker);
 
-        employeeUseCase.saveEmployees(tracker);
+        employeeUseCase.saveEmployees(client, tracker);
 
         Node topMostNode = tracker.values().stream().filter(Node::isRoot).findFirst().get();
         return Json.createObjectBuilder().add(topMostNode.getName(), this.generateJsonStructure(topMostNode)).build();

@@ -2,11 +2,14 @@ package com.personio.demo.out.repositories;
 
 import com.personio.demo.out.exceptions.EmployeeRepositoryException;
 import io.quarkus.logging.Log;
+import io.smallrye.mutiny.Uni;
 import io.vertx.mutiny.pgclient.PgPool;
+import io.vertx.mutiny.sqlclient.Row;
+import io.vertx.mutiny.sqlclient.RowSet;
+import io.vertx.mutiny.sqlclient.SqlConnection;
 import io.vertx.mutiny.sqlclient.Tuple;
 
 import javax.enterprise.context.ApplicationScoped;
-import javax.inject.Inject;
 import java.util.NoSuchElementException;
 import java.util.concurrent.ExecutionException;
 
@@ -15,25 +18,15 @@ import java.util.concurrent.ExecutionException;
  */
 @ApplicationScoped
 public class EmployeeRepository {
-    PgPool client;
-
-    /**
-     * Constructor
-     *
-     * @param client the pg pool reactive client
-     */
-    @Inject
-    public EmployeeRepository(PgPool client) {
-        this.client = client;
-    }
 
     /**
      * Gets the name of an employee from its id
+     *
+     * @param client the reactive database client
      * @param id the id
      * @return the name
-     * @throws EmployeeRepositoryException thrown when an error occurs
      */
-    public String getById(Long id) throws EmployeeRepositoryException {
+    public String getById(PgPool client, Long id) {
         try {
             return client.preparedQuery("SELECT name FROM employeemgmt.employee WHERE id = $1 ")
                     .execute(Tuple.of(id))
@@ -56,15 +49,14 @@ public class EmployeeRepository {
     /**
      * Saves an employee by its name
      *
+     * @param conn An active transactional connection
      * @param name the name
-     * @throws EmployeeRepositoryException thrown when an error occurs
+     * @return the uni file to be used
      */
-    public void saveEmployee(String name) throws EmployeeRepositoryException {
+    public Uni<RowSet<Row>> saveEmployee(SqlConnection conn, String name) {
         try {
-            client.preparedQuery("INSERT INTO employeemgmt.employee (name) VALUES ($1) ON CONFLICT DO NOTHING")
-                    .execute(Tuple.of(name))
-                    .subscribeAsCompletionStage().get();
-        } catch (InterruptedException | ExecutionException e) {
+            return conn.preparedQuery("INSERT INTO employeemgmt.employee (name) VALUES ($1) ON CONFLICT DO NOTHING").execute(Tuple.of(name));
+        } catch (Exception e) {
             Log.error(e);
             throw new EmployeeRepositoryException("An error when trying to save employee " + name);
         }

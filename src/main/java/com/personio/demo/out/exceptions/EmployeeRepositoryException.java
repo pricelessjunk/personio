@@ -5,7 +5,7 @@ import com.personio.demo.out.repositories.EmployeeRepository;
 /**
  * An exception that represents an error in the {@link EmployeeRepository}
  */
-public class EmployeeRepositoryException extends Exception {
+public class EmployeeRepositoryException extends RuntimeException {
 
     /**
      * Constructor

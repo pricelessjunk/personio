@@ -1,9 +1,9 @@
 package com.personio.demo.domain.exceptions;
 
 /**
- * This exception is thrown when more than one roots are deteced
+ * This exception is thrown when more than one roots are detected
  */
-public class MultipleRootSupervisorException extends Exception {
+public class MultipleRootSupervisorException extends RuntimeException {
     /**
      * Constructor
      *

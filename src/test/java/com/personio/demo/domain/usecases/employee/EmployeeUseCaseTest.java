@@ -4,6 +4,7 @@ import com.personio.demo.in.dto.SupervisorNameResponseData;
 import com.personio.demo.out.exceptions.SupervisorRepositoryException;
 import com.personio.demo.out.repositories.EmployeeRepository;
 import com.personio.demo.out.repositories.SupervisorRepository;
+import io.vertx.mutiny.pgclient.PgPool;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -19,17 +20,19 @@ class EmployeeUseCaseTest {
 
     EmployeeUseCase useCase;
     SupervisorRepository supRepo;
+    PgPool client;
 
     @BeforeEach
     void init() {
         supRepo = mock(SupervisorRepository.class);
         this.useCase = new EmployeeUseCase(supRepo, mock(EmployeeRepository.class));
+        this.client = mock(PgPool.class);
     }
 
     @Test
     void getEmployeeSupervisors_allSupervisorsExist() throws SupervisorRepositoryException {
-        when(supRepo.getEmployeeSupervisor(anyString())).thenReturn("level2").thenReturn("level1");
-        SupervisorNameResponseData response = useCase.getEmployeeSupervisors("level3");
+        when(supRepo.getEmployeeSupervisor(any(), anyString())).thenReturn("level2").thenReturn("level1");
+        SupervisorNameResponseData response = useCase.getEmployeeSupervisors(client,"level3");
 
         assertThat(response.getSupervisor()).isEqualTo("level2");
         assertThat(response.getLevel2Supervisor()).isEqualTo("level1");
@@ -37,8 +40,8 @@ class EmployeeUseCaseTest {
 
     @Test
     void getEmployeeSupervisors_onlyOneSupervisorExists() throws SupervisorRepositoryException {
-        when(supRepo.getEmployeeSupervisor(anyString())).thenReturn("level1").thenReturn(NO_SUPERVISOR_FOUND);
-        SupervisorNameResponseData response = useCase.getEmployeeSupervisors("level2");
+        when(supRepo.getEmployeeSupervisor(any(), anyString())).thenReturn("level1").thenReturn(NO_SUPERVISOR_FOUND);
+        SupervisorNameResponseData response = useCase.getEmployeeSupervisors(client,"level2");
 
         assertThat(response.getSupervisor()).isEqualTo("level1");
         assertThat(response.getLevel2Supervisor()).isEqualTo(NO_SUPERVISOR_FOUND);
@@ -46,8 +49,8 @@ class EmployeeUseCaseTest {
 
     @Test
     void getEmployeeSupervisors_NoSupervisorsExist() throws SupervisorRepositoryException {
-        when(supRepo.getEmployeeSupervisor(anyString())).thenReturn(NO_SUPERVISOR_FOUND).thenReturn(NO_SUPERVISOR_FOUND);
-        SupervisorNameResponseData response = useCase.getEmployeeSupervisors("level1");
+        when(supRepo.getEmployeeSupervisor(any(), anyString())).thenReturn(NO_SUPERVISOR_FOUND).thenReturn(NO_SUPERVISOR_FOUND);
+        SupervisorNameResponseData response = useCase.getEmployeeSupervisors(client,"level1");
 
         assertThat(response.getSupervisor()).isEqualTo(NO_SUPERVISOR_FOUND);
         assertThat(response.getLevel2Supervisor()).isEqualTo(NO_SUPERVISOR_FOUND);
@@ -55,8 +58,8 @@ class EmployeeUseCaseTest {
 
     @Test
     void getEmployeeSupervisors_ErrorWrongEmployee() throws SupervisorRepositoryException {
-        when(supRepo.getEmployeeSupervisor(anyString())).thenThrow(new SupervisorRepositoryException("No employee"));
-        assertThrows(SupervisorRepositoryException.class, () -> useCase.getEmployeeSupervisors("level1"),
+        when(supRepo.getEmployeeSupervisor(any(), anyString())).thenThrow(new SupervisorRepositoryException("No employee"));
+        assertThrows(SupervisorRepositoryException.class, () -> useCase.getEmployeeSupervisors(client,"level1"),
                 "An exception is expected to be thrown");
     }
 }
