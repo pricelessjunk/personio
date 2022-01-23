@@ -33,7 +33,7 @@ git clone https://github.com/pricelessjunk/personio.git
 
 This starts the postgres database in the background and the employee service.
 
-Note: The tests are skipped at the packaging stage as the inegration tests will fail due to absence of the database. If the database docker is running in the back, the skiptests can be ignored.
+Note: The tests are skipped at the packaging stage as the integration tests will fail due to absence of the database. If the database docker is running in the back, the skiptests can be ignored.
 
 ### Start the application
 
