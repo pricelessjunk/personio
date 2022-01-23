@@ -2,7 +2,9 @@
 
 This is a demo project to showcase the architectural depth. Uncle Bob's clean architecture has been taken as inspiration for this design here.
 
-The _usecases_ are the the pure logic based code. The _in_ contains all code going into the usecases. Eg. controllers. The _out_ are all the code that goes outside from the usecase. Eg. Repositories.  
+The _usecases_ are the the pure logic based code. The _in_ contains all code going into the usecases. Eg. controllers. The _out_ are all the code that goes outside from the usecase. Eg. Repositories.
+
+![Clean Architecture](images/clean.png "Clean Architecture")  
 
 ## Pre requisites
 
