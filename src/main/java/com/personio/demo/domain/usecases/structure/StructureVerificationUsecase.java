@@ -20,9 +20,8 @@ public class StructureVerificationUsecase {
      * Verifies if multiple roots are present in the hierarchical structure
      *
      * @param tracker the name tp {@link Node} map
-     * @throws MultipleRootSupervisorException thrown when multiple roots are in the hierarchy
      */
-    public void verifyMultipleRoot(Map<String, Node> tracker) throws MultipleRootSupervisorException {
+    public void verifyMultipleRoot(Map<String, Node> tracker) {
         List<String> roots = new ArrayList<>();
 
         tracker.forEach((key, value) -> {
@@ -41,11 +40,10 @@ public class StructureVerificationUsecase {
      * Verifies if a cycle is present in the hierarchical structure
      *
      * @param tracker the name tp {@link Node} map
-     * @throws CyclicStructureException thrown when a cycle is detected in the hierarchy
      */
-    public void verifyCyclicReference(Map<String, Node> tracker) throws CyclicStructureException {
+    public void verifyCyclicReference(Map<String, Node> tracker) {
         for(Node current : tracker.values()){
-            if (checkChildInParent(current, current.getParent())) {
+            if (checkNodeInParent(current, current.getParent())) {
                 throw new CyclicStructureException("A cycle has been detected for the person " + current.getName());
             }
         }
@@ -59,13 +57,13 @@ public class StructureVerificationUsecase {
      * @param parent the parent node
      * @return true if it is present, else false
      */
-    private boolean checkChildInParent(Node current, Node parent) {
+    private boolean checkNodeInParent(Node current, Node parent) {
         if (parent == null) {
             return false;
         } else if (parent.isNameSame(current.getName())) {
             return true;
         } else {
-            return checkChildInParent(current, parent.getParent());
+            return checkNodeInParent(current, parent.getParent());
         }
     }
 
