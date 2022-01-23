@@ -6,6 +6,7 @@ import com.personio.demo.domain.usecases.employee.EmployeeUseCase;
 import com.personio.demo.domain.usecases.structure.StructureUseCase;
 import com.personio.demo.domain.exceptions.CyclicStructureException;
 import com.personio.demo.domain.exceptions.MultipleRootSupervisorException;
+import com.personio.demo.in.dto.SupervisorNameResponseData;
 import com.personio.demo.out.exceptions.EmployeeRepositoryException;
 import com.personio.demo.out.exceptions.SupervisorRepositoryException;
 import io.quarkus.test.common.http.TestHTTPEndpoint;
@@ -15,8 +16,6 @@ import io.quarkus.test.security.TestSecurity;
 import io.restassured.http.ContentType;
 import io.restassured.response.ValidatableResponse;
 import org.hamcrest.CoreMatchers;
-import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import javax.json.Json;
@@ -60,14 +59,15 @@ class EmployeeStructureControllerTest {
 
     @Test
     void testGetSupervisor() throws SupervisorRepositoryException {
-        when(employeeUseCase.getEmployeeSupervisor(anyString())).thenReturn("dummy supervisor");
+        when(employeeUseCase.getEmployeeSupervisors(anyString())).thenReturn(SupervisorNameResponseData.of("dummy supervisor", "supervisors supervisor"));
 
         ValidatableResponse response = given().contentType(ContentType.JSON)
                 .when().get("/supervisor/some_employee")
                 .then();
 
         response.statusCode(200);
-        response.body("name", CoreMatchers.is("dummy supervisor"));
+        response.body("supervisor", CoreMatchers.is("dummy supervisor"));
+        response.body("level2Supervisor", CoreMatchers.is("supervisors supervisor"));
     }
 
     /**

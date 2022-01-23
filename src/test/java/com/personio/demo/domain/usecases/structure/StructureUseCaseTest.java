@@ -2,10 +2,8 @@ package com.personio.demo.domain.usecases.structure;
 
 import com.personio.demo.domain.exceptions.CyclicStructureException;
 import com.personio.demo.domain.exceptions.MultipleRootSupervisorException;
-import com.personio.demo.domain.helper.StructureMapToNodeUtil;
+import com.personio.demo.domain.commons.StructureMapToNodeUtil;
 import com.personio.demo.domain.usecases.employee.EmployeeUseCase;
-import com.personio.demo.domain.usecases.structure.StructureUseCase;
-import com.personio.demo.domain.usecases.structure.StructureVerificationUsecase;
 import com.personio.demo.out.exceptions.EmployeeRepositoryException;
 import com.personio.demo.out.exceptions.SupervisorRepositoryException;
 import org.junit.jupiter.api.BeforeEach;

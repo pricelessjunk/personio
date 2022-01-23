@@ -1,7 +1,7 @@
 package com.personio.demo.in.exceptionmappers;
 
 import com.personio.demo.domain.exceptions.CyclicStructureException;
-import com.personio.demo.in.responses.ErrorResponse;
+import com.personio.demo.in.dto.ErrorResponseData;
 import org.apache.http.HttpStatus;
 import org.junit.jupiter.api.Test;
 
@@ -23,6 +23,6 @@ class CyclicStructureExceptionMapperTest {
         Response response = exceptionMapper.toResponse(expectedException);
 
         assertThat(response.getStatus()).isEqualTo(HttpStatus.SC_BAD_REQUEST);
-        assertThat(((ErrorResponse)response.getEntity()).getMessage()).hasToString("Expected exception");
+        assertThat(((ErrorResponseData)response.getEntity()).getMessage()).hasToString("Expected exception");
     }
 }

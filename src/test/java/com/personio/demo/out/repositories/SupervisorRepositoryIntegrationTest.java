@@ -1,7 +1,7 @@
 package com.personio.demo.out.repositories;
 
 import com.personio.demo.domain.entities.Node;
-import com.personio.demo.domain.helper.StructureMapToNodeUtil;
+import com.personio.demo.domain.commons.StructureMapToNodeUtil;
 import com.personio.demo.out.exceptions.EmployeeRepositoryException;
 import com.personio.demo.out.exceptions.SupervisorRepositoryException;
 import io.quarkus.test.junit.QuarkusTest;
@@ -13,6 +13,7 @@ import javax.inject.Inject;
 import java.util.HashMap;
 import java.util.Map;
 
+import static com.personio.demo.domain.commons.Constants.NO_SUPERVISOR_FOUND;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
@@ -50,7 +51,7 @@ class SupervisorRepositoryIntegrationTest {
         assertThat(supervisor).isEqualTo("Sophie");
 
         supervisor = repo.getEmployeeSupervisor("Sophie");
-        assertThat(supervisor).isEqualTo("No parent available");
+        assertThat(supervisor).isEqualTo(NO_SUPERVISOR_FOUND);
     }
 
     @Test

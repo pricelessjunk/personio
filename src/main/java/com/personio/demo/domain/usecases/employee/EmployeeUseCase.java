@@ -1,6 +1,7 @@
 package com.personio.demo.domain.usecases.employee;
 
 import com.personio.demo.domain.entities.Node;
+import com.personio.demo.in.dto.SupervisorNameResponseData;
 import com.personio.demo.out.exceptions.SupervisorRepositoryException;
 import com.personio.demo.out.repositories.EmployeeRepository;
 import com.personio.demo.out.exceptions.EmployeeRepositoryException;
@@ -9,6 +10,8 @@ import com.personio.demo.out.repositories.SupervisorRepository;
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
 import java.util.Map;
+
+import static com.personio.demo.domain.commons.Constants.NO_SUPERVISOR_FOUND;
 
 /**
  * This usecase deals with all employee related operations
@@ -42,13 +45,17 @@ public class EmployeeUseCase {
     }
 
     /**
-     * Gets the name of the supervisor of the given employee.
+     * Gets the name of the supervisor and his/her supervisor of the given employee. If the employee is a top level employee or a
+     * 2nd level employee, a message is sent saying no supervisor is found.
      *
      * @param name the name of the employee
-     * @return the supervisor's name
+     * @return a response with the supervisor's name and his supervisors name.
      * @throws SupervisorRepositoryException thrown when an error occurs in the {@link SupervisorRepository}
      */
-    public String getEmployeeSupervisor(String name) throws SupervisorRepositoryException {
-        return this.supervisorRepo.getEmployeeSupervisor(name);
+    public SupervisorNameResponseData getEmployeeSupervisors(String name) throws SupervisorRepositoryException {
+        String supervisor =  this.supervisorRepo.getEmployeeSupervisor(name);
+        String level2Supervisor = NO_SUPERVISOR_FOUND.equals(supervisor) ? NO_SUPERVISOR_FOUND : this.supervisorRepo.getEmployeeSupervisor(supervisor);
+
+        return SupervisorNameResponseData.of(supervisor, level2Supervisor);
     }
 }

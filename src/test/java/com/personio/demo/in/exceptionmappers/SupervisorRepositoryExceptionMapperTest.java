@@ -1,6 +1,6 @@
 package com.personio.demo.in.exceptionmappers;
 
-import com.personio.demo.in.responses.ErrorResponse;
+import com.personio.demo.in.dto.ErrorResponseData;
 import com.personio.demo.out.exceptions.SupervisorRepositoryException;
 import org.apache.http.HttpStatus;
 import org.junit.jupiter.api.Test;
@@ -22,6 +22,6 @@ class SupervisorRepositoryExceptionMapperTest {
         Response response = exceptionMapper.toResponse(expectedException);
 
         assertThat(response.getStatus()).isEqualTo(HttpStatus.SC_BAD_REQUEST);
-        assertThat(((ErrorResponse)response.getEntity()).getMessage()).hasToString("Expected exception");
+        assertThat(((ErrorResponseData)response.getEntity()).getMessage()).hasToString("Expected exception");
     }
 }

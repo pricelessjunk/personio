@@ -1,4 +1,4 @@
-package com.personio.demo.domain.helper;
+package com.personio.demo.domain.commons;
 
 import com.personio.demo.domain.entities.Node;
 

@@ -1,4 +1,4 @@
-package com.personio.demo.in.responses;
+package com.personio.demo.in.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -10,6 +10,6 @@ import lombok.Setter;
 @Getter
 @Setter
 @AllArgsConstructor
-public class ErrorResponse {
+public class ErrorResponseData {
     private String message;
 }

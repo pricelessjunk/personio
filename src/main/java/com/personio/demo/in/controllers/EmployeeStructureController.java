@@ -6,7 +6,7 @@ import com.personio.demo.domain.exceptions.CyclicStructureException;
 import com.personio.demo.domain.exceptions.MultipleRootSupervisorException;
 import com.personio.demo.out.exceptions.EmployeeRepositoryException;
 import com.personio.demo.out.exceptions.SupervisorRepositoryException;
-import com.personio.demo.in.responses.SupervisorNameResponse;
+import com.personio.demo.in.dto.SupervisorNameResponseData;
 import org.jboss.resteasy.annotations.jaxrs.PathParam;
 
 import javax.annotation.security.RolesAllowed;
@@ -61,14 +61,14 @@ public class EmployeeStructureController {
      * This endpoint allows to retrieve the supervisor of the given employee
      *
      * @param name the name of the employee
-     * @return a response with the supervisors name
+     * @return a response with the supervisor's name and his/her supervisor's name
      * @throws SupervisorRepositoryException thrown when an error occurred in the supervisor repository
      */
     @GET
     @Path("/supervisor/{name}")
     @Produces(MediaType.APPLICATION_JSON)
     public Response getSupervisor(@PathParam String name) throws SupervisorRepositoryException {
-        String superVisorName =  employeeUseCase.getEmployeeSupervisor(name);
-        return Response.ok(new SupervisorNameResponse(superVisorName)).build();
+        SupervisorNameResponseData response =  employeeUseCase.getEmployeeSupervisors(name);
+        return Response.ok(response).build();
     }
 }

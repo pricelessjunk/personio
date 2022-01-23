@@ -15,6 +15,8 @@ import java.util.NoSuchElementException;
 import java.util.concurrent.ExecutionException;
 import java.util.stream.Collectors;
 
+import static com.personio.demo.domain.commons.Constants.NO_SUPERVISOR_FOUND;
+
 /**
  * The respository for the supervisor
  */
@@ -52,7 +54,7 @@ public class SupervisorRepository {
             return client.preparedQuery(selectQuery)
                     .execute(Tuple.of(name))
                     .onItem().transform(pgRowSet -> pgRowSet.iterator().next().getString("name"))
-                    .onItem().transform(val -> val == null ? "No parent available" : val)
+                    .onItem().transform(val -> val == null ? NO_SUPERVISOR_FOUND : val)
                     .subscribeAsCompletionStage().get();
         } catch (Exception e) {
             Log.error(e);
