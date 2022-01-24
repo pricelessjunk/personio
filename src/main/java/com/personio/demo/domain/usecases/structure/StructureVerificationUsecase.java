@@ -25,12 +25,12 @@ public class StructureVerificationUsecase {
         List<String> roots = new ArrayList<>();
 
         tracker.forEach((key, value) -> {
-            if(value.getParent() == null) {
+            if (value.getParent() == null) {
                 roots.add(value.getName());
             }
         });
 
-        if(roots.size() > 1) {
+        if (roots.size() > 1) {
             String message = "Multiple root supervisors found: " + roots.stream().collect(Collectors.joining(", "));
             throw new MultipleRootSupervisorException(message);
         }
@@ -42,31 +42,43 @@ public class StructureVerificationUsecase {
      * @param tracker the name tp {@link Node} map
      */
     public void verifyCyclicReference(Map<String, Node> tracker) {
-        for(Node current : tracker.values()){
-            if (checkNodeInParent(current, current.getParent())) {
-                throw new CyclicStructureException("A cycle has been detected for the person " + current.getName());
+        for (Node current : tracker.values()) {
+            String path = checkNodeInParent(current);
+            if (!"".equals(path)) {
+                throw new CyclicStructureException("A cycle has been detected: " + path);
             }
         }
     }
 
     /**
-     * This method recursively checks if a node is also present in any of its parent,
+     * This method checks if a node is also present in any of its parent,
      * It is used to detect cycles.
      *
      * @param current the current node
-     * @param parent the parent node
-     * @return true if it is present, else false
+     * @return the path if a cycle is present, else an empty string
      */
-    private boolean checkNodeInParent(Node current, Node parent) {
+    private String checkNodeInParent(Node current) {
+        Node parent = current.getParent();
+
         if (parent == null) {
-            return false;
-        } else if (parent.isNameSame(current.getName())) {
-            return true;
-        } else {
-            return checkNodeInParent(current, parent.getParent());
+            return "";
         }
+
+        List<String> path = new ArrayList<>();
+        path.add(current.getName());
+        boolean cycle = true;
+
+        while (!current.isNameSame(parent.getName())) {
+            path.add(parent.getName());
+            parent = parent.getParent();
+
+            if (parent == null) {
+                cycle = false;
+                break;
+            }
+        }
+
+        return cycle ? path.stream().collect(Collectors.joining(" -> ")) : "";
     }
-
-
 
 }

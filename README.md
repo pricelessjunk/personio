@@ -29,6 +29,7 @@ git clone https://github.com/pricelessjunk/personio.git
 ### Run Service
 
 ```shell script
+> ./mvnw clean install -DskipTests # Only first time
 > ./mvnw clean package -DskipTests
 > docker-compose up --build
 ```
